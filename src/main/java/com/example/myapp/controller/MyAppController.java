@@ -2,7 +2,6 @@ package com.example.myapp.controller;
 
 import com.example.myapp.entity.MyAppEntry;
 import com.example.myapp.service.MyAppService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,10 +70,10 @@ public class MyAppController {
     public ResponseEntity<MyAppEntry> updateEntry(@RequestBody MyAppEntry myAppEntry) {
         if(myAppEntry.getId() != null) {
             MyAppEntry old = myAppService.getEntryById(myAppEntry.getId());
-            old.setName(myAppEntry.getName() != null && myAppEntry.getName().equals("") ? myAppEntry.getName() : old.getName());
-            old.setAddress(myAppEntry.getAddress() != null && myAppEntry.getAddress().equals("") ? myAppEntry.getAddress() : old.getAddress());
-            old.setEmail(myAppEntry.getEmail() != null && !myAppEntry.getEmail().equals("") ? myAppEntry.getEmail() : old.getEmail());
-            old.setPhone(myAppEntry.getPhone() != null && myAppEntry.getPhone().equals("") ? myAppEntry.getPhone() : old.getPhone());
+            old.setName(myAppEntry.getName() != null && myAppEntry.getName().isEmpty() ? myAppEntry.getName() : old.getName());
+            old.setAddress(myAppEntry.getAddress() != null && myAppEntry.getAddress().isEmpty() ? myAppEntry.getAddress() : old.getAddress());
+            old.setEmail(myAppEntry.getEmail() != null && !myAppEntry.getEmail().isEmpty() ? myAppEntry.getEmail() : old.getEmail());
+            old.setPhone(myAppEntry.getPhone() != null && myAppEntry.getPhone().isEmpty() ? myAppEntry.getPhone() : old.getPhone());
             return new ResponseEntity<>(myAppService.updateEntry(old), HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
