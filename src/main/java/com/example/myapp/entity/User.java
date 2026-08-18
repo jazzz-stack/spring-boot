@@ -20,5 +20,5 @@ public class User {
     @NonNull // Lombok validation throw error
     private String password;
     @DBRef
-    private List<MyAppEntry> myAppEntries = new ArrayList<>();
+    private List<JournalEntry> myAppEntries = new ArrayList<>();
 }

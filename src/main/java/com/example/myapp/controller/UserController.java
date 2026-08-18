@@ -15,18 +15,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping("all-user")
     public ResponseEntity<?> findAll() {
         return ResponseEntity.ok(userService.getAll());
     }
 
-    @PostMapping
+    @PostMapping("create-user")
     public ResponseEntity<User> saveUser(@RequestBody User user) {
         userService.saveEntry(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("update-user")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
      User existingUserInDb = userService.findByUsername(user.getUsername());
      if (existingUserInDb != null) {
@@ -38,4 +38,8 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("user-by-id/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable String id) {
+        return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
+    }
 }

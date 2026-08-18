@@ -1,5 +1,4 @@
 package com.example.myapp.entity;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter // Lombok generate getters at compile time
 @Setter // Lombok generate setters at compile time
 //@Data // Equivalent to @Getter @Setter @RequiredArgsConstructor @ToString @EqualsAndHashCode.
-public class MyAppEntry {
+public class JournalEntry {
     @Id
     private String id;
     private String name;

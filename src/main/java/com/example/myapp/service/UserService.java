@@ -28,10 +28,6 @@ public class UserService {
         return "Saved successfully";
     }
 
-//    public List<User> getAll() {
-//        return userRepository.findAll();
-//    }
-
     public ResponseEntity<?> getAll() {
         List<User> users = userRepository.findAll();
         if (users.isEmpty()) {
