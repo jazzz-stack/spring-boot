@@ -35,7 +35,7 @@ public class UserController {
          userService.updateEntry(existingUserInDb);
          return new ResponseEntity<>(existingUserInDb, HttpStatus.OK);
      }
-
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }
