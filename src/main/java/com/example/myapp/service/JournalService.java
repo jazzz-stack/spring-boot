@@ -1,10 +1,12 @@
 package com.example.myapp.service;
 
 import com.example.myapp.entity.JournalEntry;
+import com.example.myapp.entity.User;
 import com.example.myapp.repository.JournalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,20 +15,15 @@ public class JournalService {
 
     @Autowired
     private JournalRepository journalRepository;
+    @Autowired
+    private UserService userService;
 
-
-    public String saveEntry(JournalEntry journalEntry) {
-        String originalEmail = journalEntry.getEmail();
-        if (originalEmail != null) {
-            UUID uuidFromName = UUID.nameUUIDFromBytes(originalEmail.getBytes());
-            String generatedId = uuidFromName.toString();
-            if (journalRepository.existsById(generatedId)) {
-                return "Entry already exists"; // Message to return
-            }
-            journalEntry.setId(generatedId);
-        }
-        journalRepository.save(journalEntry);
-        return "Saved successfully";
+    public void saveEntry(JournalEntry journalEntry, String userName) {
+        User user = userService.findByUsername(userName);
+        journalEntry.setCreatedAt(LocalDateTime.now());
+        JournalEntry saved = journalRepository.save(journalEntry);
+        user.getJournalEntries().add(saved);
+        userService.updateEntry(user);
     }
 
 

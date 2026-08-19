@@ -1,7 +1,5 @@
 package com.example.myapp.entity;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter // Lombok generate getters at compile time
 @Setter // Lombok generate setters at compile time
 //@Data // Equivalent to @Getter @Setter @RequiredArgsConstructor @ToString @EqualsAndHashCode.
+//@NoArgsConstructor
 public class JournalEntry {
     @Id
     private String id;

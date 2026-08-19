@@ -1,7 +1,9 @@
 package com.example.myapp.controller;
 
 import com.example.myapp.entity.JournalEntry;
+import com.example.myapp.entity.User;
 import com.example.myapp.service.JournalService;
+import com.example.myapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,33 +18,37 @@ public class JournalController {
 
     @Autowired
     private JournalService journalService;
+    @Autowired
+    private UserService userService;
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createEntry(@RequestBody JournalEntry journalEntry) {
+
+    @PostMapping("/create/{userName}")
+    public ResponseEntity<?> createEntry(@RequestBody JournalEntry journalEntry, @PathVariable String userName) {
         try {
-            journalEntry.setCreatedAt(LocalDateTime.now());
-            // Use the service's return message to determine the response
-            String result = journalService.saveEntry(journalEntry);
-            if ("Entry already exists".equals(result)) {
-                // Return 409 Conflict with the message
-                return new ResponseEntity<>(result, HttpStatus.CONFLICT);
-            }
-            // Return 201 Created with the saved object
+            journalService.saveEntry(journalEntry, userName);
             return new ResponseEntity<>(journalEntry, HttpStatus.CREATED);
-
         } catch (Exception e) {
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
 
-    @GetMapping("/get-all")
-    public ResponseEntity<?> getAllEntries() {
-        List<JournalEntry> myAppEntries = journalService.getAllEntries();
-        if (myAppEntries.isEmpty()) {
-            return new ResponseEntity<>("No record found",HttpStatus.NOT_FOUND);
-        } else {
-            return new ResponseEntity<>(myAppEntries, HttpStatus.OK);
+    @GetMapping("/get-all/{userName}")
+    public ResponseEntity<?> getAllJournalEntriesOfUser(@PathVariable String userName) {
+        try {
+            User user = userService.findByUsername(userName);
+            if (user != null) {
+                List<JournalEntry> journalEntries = user.getJournalEntries();
+                if (journalEntries.isEmpty()) {
+                    return new ResponseEntity<>("No journal entries found for user: " + userName, HttpStatus.NOT_FOUND);
+                } else {
+                    return new ResponseEntity<>(journalEntries, HttpStatus.OK);
+                }
+            } else {
+                return new ResponseEntity<>("User not found: " + userName, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
