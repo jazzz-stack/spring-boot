@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class JournalService {
@@ -47,11 +46,12 @@ public class JournalService {
         return journalRepository.save(journalEntry);
     }
 
-    public JournalEntry deleteEntryById(String id) {
-        JournalEntry journalEntry = journalRepository.findById(id).orElse(null);
-        if (journalEntry != null) {
-            journalRepository.delete(journalEntry);
-        }
-        return journalEntry;
+    public void deleteJournalEntryById(String id, String userName) {
+        User user = userService.findByUsername(userName);
+//        user.getJournalEntries().remove(getEntryById(id)); // simpler way
+        user.getJournalEntries().removeIf(entry -> entry.getId().equals(id)); // conditional way
+        userService.saveEntry(user);
+        journalRepository.deleteById(id);
+
     }
 }

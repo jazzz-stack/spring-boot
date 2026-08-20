@@ -86,12 +86,12 @@ public class JournalController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<JournalEntry> deleteEntry(@PathVariable String id) {
-        JournalEntry journalEntry = journalService.deleteEntryById(id);
-        if (journalEntry != null) {
-            return new ResponseEntity<>(journalEntry, HttpStatus.OK);
-        } else {
+    @DeleteMapping("/delete/{userName}/{id}")
+    public ResponseEntity<JournalEntry> deleteEntry(@PathVariable String userName, @PathVariable String id) {
+        try {
+            journalService.deleteJournalEntryById(id,userName);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
